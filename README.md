@@ -34,4 +34,4 @@ Este é um aplicativo simples de Gerenciamento de Tarefas desenvolvido com **HTM
 
 2. Execute o arquivo **index.html**.
   
-3. Ou acesse o link: 
+3. Ou acesse o link: https://to-do-app-one-lyart.vercel.app
