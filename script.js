@@ -6,15 +6,36 @@ let addTaskBtn = document.getElementById('add-task-btn')
 
 let filters = document.querySelectorAll('.filter-btn')
 
+document.addEventListener('DOMContentLoaded', () => {
+    let savedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    savedTasks.forEach(task => {
+        let li = createTaskElement(task.text, task.completed);
+        taskList.appendChild(li);
+    })
+})
+
+function saveTasksToLocalStorage() {
+    let tasks = [];
+    taskList.querySelectorAll('li').forEach(task => {
+        tasks.push({
+            text: task.firstChild.textContent.trim(),
+            completed: task.classList.contains('completed')
+        })
+    })
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
 addTaskBtn.addEventListener('click', () => {
     let taskText = taskInput.value.trim();
 
-    if(taskText) {
+    if (taskText) {
         let li = createTaskElement(taskText);
 
         taskList.appendChild(li);
 
         taskInput.value = '';
+
+        saveTasksToLocalStorage(); 
     }
 })
 
@@ -22,7 +43,7 @@ function createTaskElement(text) {
     let li = document.createElement('li');
 
     li.textContent = text;
-
+ 
     let removeBtn = document.createElement('span');
 
     removeBtn.textContent = 'Remover';
@@ -30,6 +51,8 @@ function createTaskElement(text) {
     removeBtn.classList.add('remove-btn');
 
     removeBtn.addEventListener('click', () => li.remove());
+
+    saveTasksToLocalStorage(); 
 
     li.appendChild(removeBtn);
 
@@ -46,10 +69,12 @@ function createTaskElement(text) {
     li.addEventListener('click', () => {
         if(!li.classList.contains('editing')){
             li.classList.toggle('completed');
+            saveTasksToLocalStorage();
         }
     })
 
     return li;
+    
 }
 
 function editTask(li) {
@@ -71,8 +96,10 @@ function editTask(li) {
 
             if(newText) {
                 input.replaceWith(document.createTextNode(newText));
+                saveTasksToLocalStorage();
             } else {
                 li.remove();
+                saveTasksToLocalStorage();
             }
         })
 
@@ -105,3 +132,5 @@ filters.forEach(filter => {
         })
     })
 })
+
+
